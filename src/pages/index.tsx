@@ -8,6 +8,12 @@ import {
   FormLabel,
   Input,
   InputProps,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputProps,
+  NumberInputStepper,
   Stack,
   useToast,
 } from "@chakra-ui/react"
@@ -21,11 +27,36 @@ interface InputBoxProps extends InputProps {
   name: string
 }
 
-function InputBox({ label, text, name, isDisabled, ...rest }: InputBoxProps) {
+function NumInput({ ...rest }: NumberInputProps) {
+  const [value, setValue] = useState(0)
   return (
-    <FormControl display={isDisabled && "none"}>
+    <NumberInput
+      value={value}
+      min={0}
+      max={999}
+      onChange={(_, value) => {
+        setValue(value)
+      }}
+      {...rest}
+    >
+      <NumberInputField />
+      <NumberInputStepper>
+        <NumberIncrementStepper />
+        <NumberDecrementStepper />
+      </NumberInputStepper>
+    </NumberInput>
+  )
+}
+
+function InputBox({ label, text, name, type, ...rest }: InputBoxProps) {
+  return (
+    <FormControl>
       <FormLabel htmlFor={name}>{label}</FormLabel>
-      <Input id={name} name={name} isRequired={!isDisabled} {...rest} />
+      {type === "number" ? (
+        <NumInput id={name} name={name} />
+      ) : (
+        <Input id={name} name={name} {...rest} />
+      )}
       {text && <FormHelperText>{text}</FormHelperText>}
     </FormControl>
   )
@@ -105,42 +136,28 @@ export default function () {
           label="Entrevistas Completas"
           name="entrevistas"
           text="Quantas entrevistas você chegou até o fechamento?"
-          min={0}
-          max={99}
         />
         <InputBox
-          isDisabled={dados.entrevistas == 0}
           type="number"
           label="Abduções"
           name="abducoes"
           text="Quantas matrículas você fez?"
-          min={0}
-          max={99}
         />
         <InputBox
-          isDisabled={dados.entrevistas == 0 || dados.abducoes == 0}
           type="number"
           label="Pontos"
           name="pontos"
           text="Quantos pontos você marcou?"
           step={0.5}
-          min={1}
-          max={99}
         />
         <InputBox
           type="number"
           label="Referidos"
           name="referidos"
           text="Quantos contatos você pegou?"
-          min={0}
-          max={999}
         />
         <Flex flexDir="column">
-          <Checkbox
-            marginTop="1rem"
-            name="print"
-            display={dados.referidos == 0 ? "none" : "flex"}
-          >
+          <Checkbox marginTop="1rem" name="print">
             Enviei o print dos referidos no telegram
           </Checkbox>
           <Button type="submit" textTransform="uppercase" marginTop="2rem">
