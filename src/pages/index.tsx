@@ -55,7 +55,7 @@ function InputBox({ label, text, name, type, ...rest }: InputBoxProps) {
       {type === "number" ? (
         <NumInput id={name} name={name} />
       ) : (
-        <Input id={name} name={name} {...rest} />
+        <Input id={name} name={name} type={type} {...rest} />
       )}
       {text && <FormHelperText>{text}</FormHelperText>}
     </FormControl>
