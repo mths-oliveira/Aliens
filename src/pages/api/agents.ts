@@ -6,7 +6,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   try {
     insertWorkMetrics(workMetrics)
   } catch (error) {
-    return res.json(error.message)
+    return res.status(404).json(error.message)
   }
   return res.json("ok")
 }
